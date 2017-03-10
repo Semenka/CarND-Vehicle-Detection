@@ -1,97 +1,46 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Report.html</title><style></style></head><body id="preview">
 <p><strong>Vehicle Detection Project</strong></p>
-
 <p>The goals / steps of this project are the following:</p>
-
 <ul>
 <li>Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier Linear SVM classifier</li>
-<li>Optionally, you can also apply a color transform and append binned color features, as well as histograms of color, to your HOG feature vector. </li>
+<li>Optionally, you can also apply a color transform and append binned color features, as well as histograms of color, to your HOG feature vector.</li>
 <li>Note: for those first two steps don’t forget to normalize your features and randomize a selection for training and testing.</li>
 <li>Implement a sliding-window technique and use your trained classifier to search for vehicles in images.</li>
 <li>Run your pipeline on a video stream (start with the test_video.mp4 and later implement on full project_video.mp4) and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.</li>
 <li>Estimate a bounding box for vehicles detected.</li>
 </ul>
-
-
-
-<h3 id="histogram-of-oriented-gradients-hog">Histogram of Oriented Gradients (HOG)</h3>
-
-
-
-<h4 id="1-explain-how-and-identify-where-in-your-code-you-extracted-hog-features-from-the-training-images">1. Explain how (and identify where in your code) you extracted HOG features from the training images.</h4>
-
-<p>The code of training calsisfier is in the file Vehicle_Identifier.py and using functions from file lesson_functions.py. I’ve took car/noncar *.png images and sort them by name. Extraction of HOG features is in the function get_hog_features file lessons_functions.py lines 9-26. </p>
-
+<h3><a id="Histogram_of_Oriented_Gradients_HOG_11"></a>Histogram of Oriented Gradients (HOG)</h3>
+<h4><a id="1_Explain_how_and_identify_where_in_your_code_you_extracted_HOG_features_from_the_training_images_13"></a>1. Explain how (and identify where in your code) you extracted HOG features from the training images.</h4>
+<p>The code of training calsisfier is in the file Vehicle_Identifier.py and using functions from file lesson_functions.py. I’ve took car/noncar *.png images and sort them by name. Extraction of HOG features is in the function get_hog_features file lessons_functions.py lines 9-26.</p>
 <p>I started by reading in all the <code>vehicle</code> and <code>non-vehicle</code> images.  Here is an example of one of each of the <code>vehicle</code> and <code>non-vehicle</code> classes:</p>
-
-<p><img src="./output_images/CarNotCar_example.png" alt="alt text" title=""></p>
-
+<p><img src="./output_images/CarNotCar_example.png" alt="alt text"></p>
 <p>I then explored different color spaces and different <code>skimage.hog()</code> parameters (<code>orientations</code>, <code>pixels_per_cell</code>, and <code>cells_per_block</code>).  I grabbed random images from each of the two classes and displayed them to get a feel for what the <code>skimage.hog()</code> output looks like.</p>
-
 <p>Here is an example using  HOG parameters of <code>orientations=9</code>, <code>pixels_per_cell=(8, 8)</code> and <code>cells_per_block=(2, 2)</code>:</p>
-
-<p><img src="./output_images/Hog_features_example.png" alt="alt text" title=""></p>
-
-
-
-<h4 id="2-explain-how-you-settled-on-your-final-choice-of-hog-parameters">2. Explain how you settled on your final choice of HOG parameters.</h4>
-
+<p><img src="./output_images/Hog_features_example.png" alt="alt text"></p>
+<h4><a id="2_Explain_how_you_settled_on_your_final_choice_of_HOG_parameters_27"></a>2. Explain how you settled on your final choice of HOG parameters.</h4>
 <p>I tried various combinations of parameters and find the best performance of HOG with following parameters: orientation 9, pixel per cell 8 and cell per block 2. I’ve used all HOG 3 channels for training classifier.</p>
-
-
-
-<h4 id="3-describe-how-and-identify-where-in-your-code-you-trained-a-classifier-using-your-selected-hog-features-and-color-features-if-you-used-them">3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).</h4>
-
-<p>I trained classifier using file Vehicle_Identifier.py:  linear SVM was used with splitting all images (&gt;8000 cars and &gt;8000 not cars) in the proportion 7/3 between training  and testing dataset. I’ve used spatial beam features (spatial size (64, 64)) and colour histogram in YCrCb colour space (32 histogram beans). </p>
-
-
-
-<h3 id="sliding-window-search">Sliding Window Search</h3>
-
-
-
-<h4 id="1-describe-how-and-identify-where-in-your-code-you-implemented-a-sliding-window-search-how-did-you-decide-what-scales-to-search-and-how-much-to-overlap-windows">1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?</h4>
-
+<h4><a id="3_Describe_how_and_identify_where_in_your_code_you_trained_a_classifier_using_your_selected_HOG_features_and_color_features_if_you_used_them_31"></a>3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).</h4>
+<p>I trained classifier using file Vehicle_Identifier.py:  linear SVM was used with splitting all images (&gt;8000 cars and &gt;8000 not cars) in the proportion 7/3 between training  and testing dataset. I’ve used spatial beam features (spatial size (64, 64)) and colour histogram in YCrCb colour space (32 histogram beans).</p>
+<h3><a id="Sliding_Window_Search_35"></a>Sliding Window Search</h3>
+<h4><a id="1_Describe_how_and_identify_where_in_your_code_you_implemented_a_sliding_window_search_How_did_you_decide_what_scales_to_search_and_how_much_to_overlap_windows_37"></a>1. Describe how (and identify where in your code) you implemented a sliding window search. How did you decide what scales to search and how much to overlap windows?</h4>
 <p>Sliding window function is slide_window() in the file Vehicle identifier.ipynb. 64*64 image size was used and 0.5 overlap. Those parameters shows acceptable results and are consistent with training images dataset dimensions.</p>
-
-<p><img src="./output_images/Sliding_window_example.png" alt="alt text" title=""></p>
-
-
-
-<h4 id="2-show-some-examples-of-test-images-to-demonstrate-how-your-pipeline-is-working-what-did-you-do-to-optimize-the-performance-of-your-classifier">2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?</h4>
-
-<p>Examples of my pipeline on the test images are shown below. There are some issues with identification of white cars in some examples, but in general the pipeline works well. I’ve tried different features, HOG channels, colour spaces, scanning window size etc… </p>
-
-<p><img src="./output_images/Test1_det.png" alt="alt text" title=""> <br>
-<img src="./output_images/Test2_det.png" alt="alt text" title=""> <br>
-<img src="./output_images/Test3_det.png" alt="alt text" title=""> <br>
-<img src="./output_images/Test4_det.png" alt="alt text" title=""> <br>
-<img src="./output_images/Test5_det.png" alt="alt text" title=""> <br>
-<img src="./output_images/Test6_det.png" alt="alt text" title=""></p>
-
-
-
-<h3 id="video-implementation">Video Implementation</h3>
-
-
-
-<h4 id="1-provide-a-link-to-your-final-video-output-your-pipeline-should-perform-reasonably-well-on-the-entire-project-video-somewhat-wobbly-or-unstable-bounding-boxes-are-ok-as-long-as-you-are-identifying-the-vehicles-most-of-the-time-with-minimal-false-positives">1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)</h4>
-
-<p>Here’s a <a href="./output_images/test_video_detected.mp4">link to my video result</a></p>
-
-
-
-<h4 id="2-describe-how-and-identify-where-in-your-code-you-implemented-some-kind-of-filter-for-false-positives-and-some-method-for-combining-overlapping-bounding-boxes">2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.</h4>
-
+<p><img src="./output_images/Sliding_window_example.png" alt="alt text"></p>
+<h4><a id="2_Show_some_examples_of_test_images_to_demonstrate_how_your_pipeline_is_working_What_did_you_do_to_optimize_the_performance_of_your_classifier_43"></a>2. Show some examples of test images to demonstrate how your pipeline is working. What did you do to optimize the performance of your classifier?</h4>
+<p>Examples of my pipeline on the test images are shown below. There are some issues with identification of white cars in some examples, but in general the pipeline works well. I’ve tried different features, HOG channels, colour spaces, scanning window size etc…</p>
+<p><img src="./output_images/Test1_det.png" alt="alt text"> &lt;br&gt;</p>
+<p><img src="./output_images/Test2_det.png" alt="alt text"> &lt;br&gt;</p>
+<p><img src="./output_images/Test3_det.png" alt="alt text"> &lt;br&gt;</p>
+<p><img src="./output_images/Test4_det.png" alt="alt text"> &lt;br&gt;</p>
+<p><img src="./output_images/Test5_det.png" alt="alt text"> &lt;br&gt;</p>
+<p><img src="./output_images/Test6_det.png" alt="alt text"></p>
+<h3><a id="Video_Implementation_59"></a>Video Implementation</h3>
+<h4><a id="1_Provide_a_link_to_your_final_video_output_Your_pipeline_should_perform_reasonably_well_on_the_entire_project_video_somewhat_wobbly_or_unstable_bounding_boxes_are_ok_as_long_as_you_are_identifying_the_vehicles_most_of_the_time_with_minimal_false_positives_61"></a>1. Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)</h4>
+<p>Here’s a <a href="./output_images/test_video_detec.mp4">link to my video result</a></p>
+<h4><a id="2_Describe_how_and_identify_where_in_your_code_you_implemented_some_kind_of_filter_for_false_positives_and_some_method_for_combining_overlapping_bounding_boxes_65"></a>2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.</h4>
 <p>I’ve used heat map techniques and implemented it in the scope of my pipeline in the function filtered_boxes() file Vehicle_Identifier.py. Below is example of heat map and corresponding reduction of false positive detections.</p>
+<p><img src="./output_images/Test6_det.png" alt="alt text"></p>
+<h3><a id="Discussion_71"></a>Discussion</h3>
+<h4><a id="1_Briefly_discuss_any_problems__issues_you_faced_in_your_implementation_of_this_project_Where_will_your_pipeline_likely_fail_What_could_you_do_to_make_it_more_robust_73"></a>1. Briefly discuss any problems / issues you faced in your implementation of this project. Where will your pipeline likely fail? What could you do to make it more robust?</h4>
+<p>My pipeline is failing in the case of white car. Increase of training dataset size for classifier could help to solve it. As well there is an issue with detection of different size vehicles and subsampling of bigger size window by HOG features could help to solve it.</p>
 
-<p><img src="./output_images/Test6_det.png" alt="alt text" title=""></p>
-
-
-
-<h3 id="discussion">Discussion</h3>
-
-
-
-<h4 id="1-briefly-discuss-any-problems-issues-you-faced-in-your-implementation-of-this-project-where-will-your-pipeline-likely-fail-what-could-you-do-to-make-it-more-robust">1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?</h4>
-
-<p>My pipeline is failing in the case of white car. Increase of training dataset size for classifier could help to solve it. As well there is an issue with detection of different size vehicles and subsampling of bigger size window by HOG features could help to solve it. </p>
+</body></html>
